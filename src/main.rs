@@ -1,4 +1,5 @@
 use clap::{Parser, Subcommand};
+use serde::{Deserialize, Serialize};
 
 #[derive(Parser)]
 #[command(name = "todo-cli")]
@@ -20,8 +21,31 @@ enum Commands {
     Remove { id: usize },
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+struct Task {
+    id: usize,
+    description: String,
+    completed: bool,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+struct TodoList {
+    tasks: Vec<Task>,
+    next_id: usize,
+}
+
+impl TodoList {
+    fn new() -> Self {
+        TodoList {
+            tasks: Vec::new(),
+            next_id: 1,
+        }
+    }
+}
+
 fn main() {
     let cli = Cli::parse();
+    let mut todo_list = TodoList::new();
 
     match cli.command {
         Commands::Add { description } => {
