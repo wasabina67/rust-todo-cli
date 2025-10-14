@@ -1,5 +1,5 @@
 [package]
-name = "rust-todo-cli"
+name = "todo-cli"
 version = "0.1.0"
 edition = "2024"
 
