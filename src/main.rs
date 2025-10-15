@@ -13,13 +13,9 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    // Add
     Add { description: String },
-    // List
     List,
-    // Complete
     Complete { id: usize },
-    // Remove
     Remove { id: usize },
 }
 
@@ -54,9 +50,9 @@ impl TodoList {
         self.next_id += 1;
     }
 
-    fn display(&mut self) {
+    fn display(&self) {
         if self.tasks.is_empty() {
-            println!("No tasks");
+            println!("No tasks yet");
             return;
         }
 
@@ -73,7 +69,7 @@ impl TodoList {
             task.completed = true;
             Ok(())
         } else {
-            Err(format!("Not found: id {}", id))
+            Err(format!("Task not found: id {}", id))
         }
     }
 
@@ -82,7 +78,7 @@ impl TodoList {
             self.tasks.remove(pos);
             Ok(())
         } else {
-            Err(format!("Not found: id {}", id))
+            Err(format!("Task not found: id {}", id))
         }
     }
 }
@@ -117,7 +113,7 @@ fn main() {
         Commands::Add { description } => {
             todo_list.add_task(description.clone());
             save_todo_list(&todo_list);
-            println!("Add: {}", description);
+            println!("Added: {}", description);
         }
         Commands::List => {
             todo_list.display();
@@ -126,7 +122,7 @@ fn main() {
             match todo_list.complete_task(id) {
                 Ok(_) => {
                     save_todo_list(&todo_list);
-                    println!("Complete: id {}", id);
+                    println!("Completed: id {}", id);
                 }
                 Err(e) => eprintln!("Error: {}", e),
             }
@@ -135,7 +131,7 @@ fn main() {
             match todo_list.remove_task(id) {
                 Ok(_) => {
                     save_todo_list(&todo_list);
-                    println!("Remove: id {}", id);
+                    println!("Removed: id {}", id);
                 }
                 Err(e) => eprintln!("Error: {}", e),
             }
