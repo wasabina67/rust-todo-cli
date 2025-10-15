@@ -42,6 +42,12 @@ cargo run -- complete 1
 cargo run -- remove 1
 ```
 
+### Help
+
+```bash
+cargo run -- --help
+```
+
 ## Build
 
 ```bash
