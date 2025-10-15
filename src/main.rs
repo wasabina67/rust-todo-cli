@@ -13,13 +13,13 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    /// Add
+    // Add
     Add { description: String },
-    /// List
+    // List
     List,
-    /// Complete
+    // Complete
     Complete { id: usize },
-    /// Remove
+    // Remove
     Remove { id: usize },
 }
 
@@ -54,7 +54,7 @@ impl TodoList {
         self.next_id += 1;
     }
 
-    fn list(&mut self) {
+    fn display(&mut self) {
         if self.tasks.is_empty() {
             println!("No tasks");
             return;
@@ -77,8 +77,14 @@ impl TodoList {
         }
     }
 
-    // fn remove_task(&mut self, id: usize) -> Result<(), String> {
-    // }
+    fn remove_task(&mut self, id: usize) -> Result<(), String> {
+        if let Some(pos) = self.tasks.iter().position(|t| t.id == id) {
+            self.tasks.remove(pos);
+            Ok(())
+        } else {
+            Err(format!("Not found: id {}", id))
+        }
+    }
 }
 
 fn get_data_file_path() -> PathBuf {
@@ -114,7 +120,7 @@ fn main() {
             println!("Add: {}", description);
         }
         Commands::List => {
-            todo_list.list();
+            todo_list.display();
         }
         Commands::Complete { id } => {
             match todo_list.complete_task(id) {
@@ -126,7 +132,13 @@ fn main() {
             }
         }
         Commands::Remove { id } => {
-            println!("Remove: id {}", id);
+            match todo_list.remove_task(id) {
+                Ok(_) => {
+                    save_todo_list(&todo_list);
+                    println!("Remove: id {}", id);
+                }
+                Err(e) => eprintln!("Error: {}", e),
+            }
         }
     }
 }
