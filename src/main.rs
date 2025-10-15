@@ -45,6 +45,13 @@ impl TodoList {
     }
 
     fn add_task(&mut self, description: String) {
+        let task = Task {
+            id: self.next_id,
+            description,
+            completed: false,
+        };
+        self.tasks.push(task);
+        self.next_id += 1;
     }
 
     fn list(&mut self) {
@@ -96,6 +103,8 @@ fn main() {
 
     match cli.command {
         Commands::Add { description } => {
+            todo_list.add_task(description.clone());
+            save_todo_list(&todo_list);
             println!("Add: {}", description);
         }
         Commands::List => {
