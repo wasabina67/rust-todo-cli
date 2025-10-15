@@ -68,8 +68,14 @@ impl TodoList {
         println!();
     }
 
-    // fn complete_task(&mut self, id: usize) -> Result<(), String> {
-    // }
+    fn complete_task(&mut self, id: usize) -> Result<(), String> {
+        if let Some(task) = self.tasks.iter_mut().find(|t| t.id == id) {
+            task.completed = true;
+            Ok(())
+        } else {
+            Err(format!("Not found: id {}", id))
+        }
+    }
 
     // fn remove_task(&mut self, id: usize) -> Result<(), String> {
     // }
@@ -111,7 +117,13 @@ fn main() {
             todo_list.list();
         }
         Commands::Complete { id } => {
-            println!("Complete: id {}", id);
+            match todo_list.complete_task(id) {
+                Ok(_) => {
+                    save_todo_list(&todo_list);
+                    println!("Complete: id {}", id);
+                }
+                Err(e) => eprintln!("Error: {}", e),
+            }
         }
         Commands::Remove { id } => {
             println!("Remove: id {}", id);
