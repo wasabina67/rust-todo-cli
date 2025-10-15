@@ -41,3 +41,23 @@ cargo run -- complete 1
 ```bash
 cargo run -- remove 1
 ```
+
+## Build
+
+```bash
+cargo build
+```
+
+```bash
+cargo build --release
+```
+
+## Run
+
+```bash
+cargo run -- list
+```
+
+```bash
+./target/release/todo-cli list
+```
