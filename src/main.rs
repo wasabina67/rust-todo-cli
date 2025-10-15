@@ -48,13 +48,24 @@ impl TodoList {
     }
 
     fn list(&mut self) {
+        if self.tasks.is_empty() {
+            println!("No tasks");
+            return;
+        }
+
+        println!();
+        for task in &self.tasks {
+            let status = if task.completed { "✓" } else { " " };
+            println!("[{}] {} - {}", status, task.id, task.description);
+        }
+        println!();
     }
 
-    fn complete_task(&mut self, id: usize) -> Result<(), String> {
-    }
+    // fn complete_task(&mut self, id: usize) -> Result<(), String> {
+    // }
 
-    fn remove_task(&mut self, id: usize) -> Result<(), String> {
-    }
+    // fn remove_task(&mut self, id: usize) -> Result<(), String> {
+    // }
 }
 
 fn get_data_file_path() -> PathBuf {
@@ -73,6 +84,12 @@ fn load_todo_list() -> TodoList {
     }
 }
 
+fn save_todo_list(todo_list: &TodoList) {
+    let path = get_data_file_path();
+    let data = serde_json::to_string_pretty(todo_list).expect("Failed to convert to JSON");
+    fs::write(&path, data).expect("Failed to write file");
+}
+
 fn main() {
     let cli = Cli::parse();
     let mut todo_list = load_todo_list();
@@ -82,7 +99,7 @@ fn main() {
             println!("Add: {}", description);
         }
         Commands::List => {
-            println!("List");
+            todo_list.list();
         }
         Commands::Complete { id } => {
             println!("Complete: id {}", id);
